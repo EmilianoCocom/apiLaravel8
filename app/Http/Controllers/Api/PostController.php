@@ -9,6 +9,10 @@ use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
+    /**
+     * Client ID: 94605529-7249-43ed-88ff-0711fa79b993
+     * Client secret: YpdKsHAS9kHPnRHDsDyiM9uRVLqPY20Gpi88CmRx
+     */
 
     public function __construct()
     {
