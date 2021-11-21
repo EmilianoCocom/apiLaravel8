@@ -35,11 +35,21 @@
                             </ul>
                         </div>
 
-                        <x-label>
-                            Nombre
-                        </x-label>
+                        <div>
+                            <x-label>Nombre</x-label>
+                            <x-input v-model="form.name" type="text" class="w-full mt-1"/>
+                        </div>
 
-                        <x-input v-model="form.name" type="text" class="w-full mt-1"/>
+                        <div v-if="scopes.length > 0">
+                            <x-label>Scopes</x-label>
+                            <div v-for="scope in scopes">
+                                <x-label>
+                                    <input type="checkbox" name="scopes" :value="scope.id" v-model="form.scopes"/>
+                                    @{{scope.id}}
+                                </x-label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -131,8 +141,10 @@
                 el: "#app",
                 data: {
                     tokens: [],
+                    scopes: [],
                     form: {
                         name: '',
+                        scopes: [],
                         errors: [],
                         disabled: false,
                     },
@@ -143,8 +155,15 @@
                 },
                 mounted() {
                     this.getTokens()
+                    this.getScopes()
                 },
                 methods: {
+                    getScopes() {
+                        axios.get('/oauth/scopes')
+                            .then(response => {
+                                this.scopes = response.data
+                            })
+                    },
                     getTokens() {
                         axios.get('/oauth/personal-access-tokens')
                             .then(response => {
@@ -156,6 +175,7 @@
                         axios.post('/oauth/personal-access-tokens', this.form)
                             .then(response => {
                                 this.form.name = ''
+                                this.form.scopes = []
                                 this.form.errors = []
                                 this.form.disabled = false
                                 this.getTokens()
